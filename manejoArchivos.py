@@ -1,62 +1,62 @@
-
 cadenas_validas = []
 cadenas_no_validas = []
 
 
 def es_keyword(palabra):
     keywords = ["int", "char", "string"]
-    if palabra in keywords:
-        return True
-    else:
-        return False
-    
-def agrega_cadena(tipo,ident,val):
-    cad = {"Tipo":tipo, "Identificador":ident, "Valor":val}
+    return palabra in keywords
+
+
+def agrega_cadena(tipo, ident, val):
+    cad = {"Tipo": tipo, "Identificador": ident, "Valor": val}
     cadenas_validas.append(cad)
-    
-    # Mostrar cadenas válidas
+
+
 def mostrar_cadenas(contenido):
     found = False
     for cad in contenido:
         found = True
-        print("Los datos de las cadenas validas son: ", cad)
-    # PENDIENTE
-    if found == False :
-        print("No se registraron valores válidos.")
+        print(cad)
+    if not found:
+        print("No se registraron valores.")
+
 
 with open("Archivo1.txt", "r", encoding="UTF-8") as f:
-    
+    # Se lee el archivo línea por línea
     while True:
-        contenido = f.read()
+        linea = f.readline()
+
+        # Si ya no hay más líneas, se termina
+        if linea == "":
+            break
+
+        # Se eliminan espacios y saltos de línea ANTES de revisar el ';'
+        contenido = linea.strip()
+
         if contenido == "":
             continue
-        
+
         if contenido.endswith(';'):
-            # Se utiliza para eliminar caracteres específicos
-            # devolviendo una nueva cadena sin modificar la original. 
             contenido = contenido[:-1].strip()
-            #Split separa las cadenas
             partes = contenido.split()
 
             if len(partes) == 2:
-                tipo = partes[0]
-                identificador = partes[1]
-                # verificamos que el tipo de dato sea permitido 
+                tipo, identificador = partes
+
                 if es_keyword(tipo):
-                    #Aqui se verifica que no se inicie con un digito
                     if identificador[0].isdigit():
                         cadenas_no_validas.append(contenido)
                     else:
-                        print("cadena valida")
-                        #Aqui se agrega la cadena, se deja en None porque puede llevar un valor o no.
+                        print("Cadena valida")
                         agrega_cadena(tipo, identificador, None)
                 else:
                     cadenas_no_validas.append(contenido)
             else:
-                cadenas_no_validas.append(contenido)        
-            
-                    
-                    
-# Cuando termina el codigo se muestran las cadenas validas
-mostrar_cadenas("Las cadenas valias son: ", cadenas_validas)
-mostrar_cadenas("Las cadenas no validas son: ", cadenas_no_validas)
+                cadenas_no_validas.append(contenido)
+        else:
+            cadenas_no_validas.append(contenido)
+
+print("Cadenas validas")
+mostrar_cadenas(cadenas_validas)
+print("Cadenas no validas")
+mostrar_cadenas(cadenas_no_validas)
